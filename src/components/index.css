@@ -1,0 +1,12 @@
+html, body {
+    overflow-y:auto;
+    height: 100%;
+}
+
+body{
+    background-color: #ecedef;
+}
+
+.kanban-column-title{
+    font-family: "Times New Roman", Times, serif;
+}
