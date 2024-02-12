@@ -18,13 +18,13 @@ This project aims to develop a dynamic and user-friendly Kanban board using the 
 Clone the project
 
 ```bash
-  git clone https://link-to-project
+  git clone https://github.com/Takayuki0x/Kanban-Maestro/
 ```
 
 Go to the project directory
 
 ```bash
-  cd my-project
+  cd Kanban-Maestro
 ```
 
 Install dependencies
