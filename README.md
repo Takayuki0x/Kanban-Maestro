@@ -5,7 +5,7 @@ This project aims to develop a dynamic and user-friendly Kanban board using the 
 
 - No account creation required.
 - Full privacy guaranteed.
-- Public version available in case you don't want to self-host it.
+- Public version available in case you don't want to self-host it: https://monumental-biscuit-4f87f3.netlify.app
 ## Screenshots
 
 ![App Screenshot](https://github.com/Takayuki0x/Kanban-Maestro/blob/main/images/Screenshot1.png?raw=true)
