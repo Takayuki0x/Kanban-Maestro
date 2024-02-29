@@ -5,7 +5,7 @@ export default function TopNavbar(){
     return(
         <Navbar position="static">
             <NavbarBrand>
-                <Link className="font-bold text-inherit" to="/">KanbanMaestro</Link>
+                <Link className="font-bold text-inherit" to="/">KanbanMaestro v2</Link>
             </NavbarBrand>
 
             <NavbarContent className="hidden sm:flex gap-4" justify="center">
