@@ -24,7 +24,7 @@ const columns = [
 ]
 
 export default function Dashboard(){
-    const { boards, handleNewBoardCreation, handleBoardDeletion } = useContext(KBContext);
+    const { boards, handleNewBoardCreation, handleBoardDeletion, handleBoardEdit } = useContext(KBContext);
 
     const renderCell = useCallback((board, columnKey) => {
         const cellValue = board[columnKey];
@@ -73,12 +73,12 @@ export default function Dashboard(){
 
     return(
         <div className="container-fluid h-dvh">
-            <TopNavbar />
+            <TopNavbar activePage="Dashboard"/>
             <br/><br/>
             <div className="mx-8">
                 <div className="flex">
                     <CreateNewBoardModal handleNewBoardCreation={handleNewBoardCreation} />
-                    <p className="ml-6 mt-2 text-gray-400">Used storage: {getLocalStorageSize()}</p>
+                    <p className="ml-6 mt-2 text-gray-600">Used storage: {getLocalStorageSize()}</p>
                 </div>
                 <br/>
                 <Table aria-label="Example table with custom cells">

@@ -7,7 +7,8 @@ const savedBoards = JSON.parse(localStorage.getItem("boardsMetadata"));
 export const KBContext = createContext({
     boards: savedBoards == null ? [] : savedBoards,
     handleNewBoardCreation: () => {},
-    handleBoardDeletion: () => {}
+    handleBoardDeletion: () => {},
+    handleBoardEdit: () => {}
 });
 
 function KBReducer(state, action){
@@ -63,7 +64,8 @@ export default function KBContextProvider({children}){
     const [KBState, KBDispatch] = useReducer(KBReducer, {
         boards: savedBoards == null ? [] : savedBoards,
         handleNewBoardCreation: () => {},
-        handleBoardDeletion: () => {}
+        handleBoardDeletion: () => {},
+        handleBoardEdit: () => {}
     });
 
     function handleNewBoardCreation(name, description, creation_date){
@@ -76,7 +78,10 @@ export default function KBContextProvider({children}){
 
         KBDispatch({
             type: 'CREATE_BOARD',
-            payload: {name, description, creation_date,
+            payload: {
+                name,
+                description,
+                creation_date,
                 id: nextAvailableID
             }
         });
@@ -91,10 +96,23 @@ export default function KBContextProvider({children}){
         })
     }
 
+    function handleBoardEdit(name, description, creation_date, id){
+        KBDispatch({
+            type: 'EDIT_BOARD',
+            payload: {
+                name,
+                description,
+                creation_date,
+                id
+            }
+        })
+    }
+
     const KBContextValue = {
         boards: KBState.boards,
-        handleNewBoardCreation: handleNewBoardCreation,
-        handleBoardDeletion: handleBoardDeletion
+        handleNewBoardCreation,
+        handleBoardDeletion,
+        handleBoardEdit
     };
 
     return(<KBContext.Provider value={KBContextValue}>
