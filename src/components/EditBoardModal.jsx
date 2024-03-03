@@ -3,29 +3,24 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDis
 
 import {PencilIcon} from './Icons/PencilIcon.jsx';
 import {BlockquoteIcon} from './Icons/BlockquoteIcon.jsx';
-import {BoardIconSVG} from "./Icons/BoardIconSVG";
+import {EditIcon} from './Icons/EditIcon';
 
-export default function CreateNewBoardModal({ handleNewBoardCreation }){
+export default function EditBoardModal({ handleBoardEdit, id, baseName, baseDescription }){
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    const [isError, setIsError] = useState(false);
+    const [name, setName] = useState(baseName)
+    const [description, setDescription] = useState(baseDescription)
 
     const handleCreation = (onClose) => {
-        if(name == "" || name == null){
-            setIsError(true);
-        } else {
-            handleNewBoardCreation(name, description, Date.now());
-            setName("");
-            setDescription("");
-            setIsError(false);
-            onClose();
-        }
+        handleBoardEdit(name, description, id);
+        setName("");
+        setDescription("");
+        onClose();
+        location.reload();
     }
 
-    return (
+    return(
         <>
-            <Button color="danger" onPress={onOpen} startContent={BoardIconSVG}>New Board</Button>
+            <EditIcon onClick={onOpen} />
             <Modal 
             isOpen={isOpen} 
             onOpenChange={onOpenChange}
@@ -35,7 +30,7 @@ export default function CreateNewBoardModal({ handleNewBoardCreation }){
                 <ModalContent>
                     {(onClose) => (
                         <>
-                            <ModalHeader className="flex flex-col gap-1">Create New Board</ModalHeader>
+                            <ModalHeader className="flex flex-col gap-1">Edit Board</ModalHeader>
                             <ModalBody>
                                 <Input
                                     autoFocus
@@ -47,7 +42,6 @@ export default function CreateNewBoardModal({ handleNewBoardCreation }){
                                     value={name}
                                     onValueChange={setName}
                                 />
-                                {isError ? <p className="text-red-500">Name is required</p> : ""}
                                 <Textarea
                                     endContent={BlockquoteIcon}
                                     label="Description"
@@ -70,5 +64,6 @@ export default function CreateNewBoardModal({ handleNewBoardCreation }){
                 </ModalContent>
             </Modal>
         </>
-    );
+        
+    )
 }

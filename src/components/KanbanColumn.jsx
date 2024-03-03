@@ -32,8 +32,8 @@ export default function KanbanColumn({ columnData }){
                 </div>
                 <div className="text-center px-4 py-3">
                     <div>
-                        <h1 className="bold kanban-column-title text-xl">{columnData.title}</h1>
-                        <h6 className="text-sm text-gray-400">No cards</h6>
+                        <h1 className="font-bold text-lg">{columnData.title}</h1>
+                        <h6 className="text-sm text-gray-400">{`${columnData.cards.length} ${columnData.cards.length == 1 ? 'Card' : 'Cards'}`}</h6>
                     </div>
                     <div>
                         {columnData.cards.map((kanbancard) => {

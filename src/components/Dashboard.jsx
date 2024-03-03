@@ -2,9 +2,9 @@ import { useCallback, useContext } from "react";
 
 import TopNavbar from "./TopNavbar"
 import CreateNewBoardModal from "./CreateNewBoardModal";
+import EditBoardModal from "./EditBoardModal";
 
 import {DeleteIcon} from './Icons/DeleteIcon'
-import {EditIcon} from './Icons/EditIcon'
 import {EyeIcon} from "./Icons/EyeIcon";
 
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Chip, Tooltip} from "@nextui-org/react";
@@ -40,7 +40,7 @@ export default function Dashboard(){
             );
           case "creation_date":
             return (
-                <Tooltip content={`${Math.floor((Date.now() - cellValue)/8.64e7)} Days ago`} color="primary">
+                <Tooltip content={`${Math.floor((Date.now() - cellValue)/8.64e7)} Days ago`} color="default">
                     <Chip className="capitalize" color="default" size="sm" variant="flat">
                         {fromEpochToLocalDateTimeString(cellValue)}
                     </Chip>
@@ -56,7 +56,7 @@ export default function Dashboard(){
                 </Tooltip>
                 <Tooltip content="Edit board">
                   <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                    <EditIcon />
+                    <EditBoardModal handleBoardEdit={handleBoardEdit} id={board.id} baseName={board.name} baseDescription={board.description} />
                   </span>
                 </Tooltip>
                 <Tooltip color="danger" content="Delete board">
@@ -69,35 +69,35 @@ export default function Dashboard(){
           default:
             return cellValue;
         }
-    }, [handleBoardDeletion]);
+    }, [handleBoardDeletion, handleBoardEdit]);
 
     return(
-        <div className="container-fluid h-dvh">
-            <TopNavbar activePage="Dashboard"/>
-            <br/><br/>
-            <div className="mx-8">
-                <div className="flex">
-                    <CreateNewBoardModal handleNewBoardCreation={handleNewBoardCreation} />
-                    <p className="ml-6 mt-2 text-gray-600">Used storage: {getLocalStorageSize()}</p>
-                </div>
-                <br/>
-                <Table aria-label="Example table with custom cells">
-                    <TableHeader columns={columns}>
-                        {(column) => (
-                            <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"}>
-                                {column.name}
-                            </TableColumn>
-                        )}
-                    </TableHeader>
-                    <TableBody emptyContent={"No Kanban boards to display. Press the \"NEW BOARD\" button to create one."} items={boards}>
-                        {(item) => (
-                            <TableRow key={item.id}>
-                                {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
-                            </TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </div>
-        </div>
+      <div className="container-fluid h-dvh">
+          <TopNavbar activePage="Dashboard"/>
+          <br/><br/>
+          <div className="mx-8">
+              <div className="flex">
+                  <CreateNewBoardModal handleNewBoardCreation={handleNewBoardCreation} />
+                  <p className="ml-6 mt-2 text-gray-600">Used storage: {getLocalStorageSize()}</p>
+              </div>
+              <br/>
+              <Table aria-label="Example table with custom cells">
+                  <TableHeader columns={columns}>
+                      {(column) => (
+                          <TableColumn key={column.uid} align={column.uid === "actions" ? "center" : "start"}>
+                              {column.name}
+                          </TableColumn>
+                      )}
+                  </TableHeader>
+                  <TableBody emptyContent={"No Kanban boards to display. Press the \"NEW BOARD\" button to create one."} items={boards}>
+                      {(item) => (
+                          <TableRow key={item.id}>
+                              {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+                          </TableRow>
+                      )}
+                  </TableBody>
+              </Table>
+          </div>
+      </div>
     )
 }

@@ -105,11 +105,13 @@ export default function AboutPage(){
                 </div>
                 <br/><br/>
                 <div className="flex content-center mx-auto justify-center gap-2">
+                    <Button color="default" variant="solid" startContent={GithubIcon} onPress={() => {
+                        window.open("https://github.com/Takayuki0x/Kanban-Maestro", '_blank')
+                    }}>
+                        Check out the repo
+                    </Button>
                     <Button color="danger" variant="solid" startContent={BoardIconSVG} onPress={redirectToDasboard}>
                         Go to your boards
-                    </Button>
-                    <Button color="default" variant="solid" startContent={GithubIcon} onPress={() => {}}>
-                        Check out the repo
                     </Button>
                 </div>
             </div>

@@ -6,13 +6,18 @@ import ColumnColorSelector from "./ColumnColorSelector";
 
 export default function KanbanEditColumnIcon({ columnID, handleEditColumn, currentTitle, currentColor }){
     const [isOpen, setIsOpen] = useState(false);
-    const [color, setColor] = useState("");
+    const [color, setColor] = useState(currentColor);
     const [title, setTitle] = useState(currentTitle);
+    const [isError, setIsError] = useState(false);
 
     const handleColumnEdit = () => {
-        handleEditColumn(columnID, color, title);
-        setTitle("");
-        setIsOpen(false);
+        if(title == "" || title == null){
+            setIsError(true);
+        } else {
+            handleEditColumn(columnID, color, title);
+            setIsOpen(false);
+            setIsError(false);
+        }
     }
 
     return(
@@ -31,6 +36,7 @@ export default function KanbanEditColumnIcon({ columnID, handleEditColumn, curre
                             </p>
                             <div className="mt-2 flex flex-col gap-2 w-full">
                                 <Input defaultValue="" label="Title" size="sm" variant="bordered" isRequired value={title} onValueChange={setTitle} />
+                                {isError ? <p className="text-red-500">Title is required</p> : ""}
                                 <p className="text-small font-bold text-foreground" {...titleProps}>
                                     Color
                                 </p>
@@ -38,7 +44,14 @@ export default function KanbanEditColumnIcon({ columnID, handleEditColumn, curre
                                     <ColumnColorSelector setColor={setColor} defaultColor={currentColor} />
                                 </div>
                                 <div className="flex space-x-1 justify-end">
-                                    <Button color="danger" onClick={() => {setIsOpen(false)}}>Cancel</Button>
+                                    <Button color="danger" onClick={() => {
+                                        setColor(currentColor);
+                                        setTitle(currentTitle);
+                                        setIsOpen(false);
+                                        setIsError(false);
+                                    }}>
+                                        Cancel
+                                    </Button>
                                     <Button color="primary" onClick={handleColumnEdit}>Create</Button>
                                 </div>
                             </div>
