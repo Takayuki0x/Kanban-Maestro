@@ -11,9 +11,9 @@ export default function TopNavbar({activePage}){
 
             <NavbarContent className="hidden sm:flex gap-4" justify="center">
                 <NavbarItem isActive={activePage === "Dashboard"}>
-                    <a className="hover:cursor-pointer" href="/dashboard">
+                    <Link className="hover:cursor-pointer" to="/dashboard">
                         Dashboard
-                    </a>
+                    </Link>
                 </NavbarItem>
                 <NavbarItem isActive={activePage === "Documentation"}>
                     <Link className="hover:cursor-pointer" to="/documentation">
