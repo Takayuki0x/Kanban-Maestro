@@ -1,12 +1,14 @@
+@import url('https://fonts.googleapis.com/css?family=Muli&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Quicksand&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Inter&display=swap');
+
+
 html, body {
     overflow-y:auto;
     height: 100%;
+    font-family: 'Inter', sans-serif;
 }
 
 body{
     background-color: #ecedef;
-}
-
-.kanban-column-title{
-    font-family: "Times New Roman", Times, serif;
 }

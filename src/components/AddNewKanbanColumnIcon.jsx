@@ -7,13 +7,20 @@ import ColumnColorSelector from "./ColumnColorSelector";
 
 export default function AddNewKanbanColumnIcon({ handleCreateColumn }){
     const [isOpen, setIsOpen] = useState(false);
-    const [color, setColor] = useState("");
+    const [color, setColor] = useState("red");
     const [title, setTitle] = useState("");
+    const [isError, setIsError] = useState(false);
 
     const handleColumnCreation = () => {
-        handleCreateColumn(color, title);
-        setTitle("");
-        setIsOpen(false);
+        if(title == "" || title == null){
+            setIsError(true);
+        } else {
+            handleCreateColumn(color, title);
+            setTitle("");
+            setColor("red");
+            setIsOpen(false);
+            setIsError(false);
+        }
     }
 
     return(
@@ -32,14 +39,15 @@ export default function AddNewKanbanColumnIcon({ handleCreateColumn }){
                             </p>
                             <div className="mt-2 flex flex-col gap-2 w-full">
                                 <Input defaultValue="" label="Title" size="sm" variant="bordered" isRequired value={title} onValueChange={setTitle} />
+                                {isError ? <p className="text-red-500">Title is required</p> : ""}
                                 <p className="text-small font-bold text-foreground" {...titleProps}>
                                     Color
                                 </p>
                                 <div>
-                                    <ColumnColorSelector setColor={setColor} />
+                                    <ColumnColorSelector setColor={setColor} defaultColor="red" />
                                 </div>
                                 <div className="flex space-x-1 justify-end">
-                                    <Button color="danger" onClick={() => {setIsOpen(false)}}>Cancel</Button>
+                                    <Button color="danger" onClick={() => {setIsOpen(false); setIsError(false);}}>Cancel</Button>
                                     <Button color="primary" onClick={handleColumnCreation}>Create</Button>
                                 </div>
                             </div>

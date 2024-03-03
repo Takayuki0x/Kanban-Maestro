@@ -36,12 +36,12 @@ export default function KanbanCard({ title, content, columnID, cardID, handleEdi
                     {
                         isEditing ?
                         <Input size="sm" color="default" radius="sm" label="Title" labelPlacement="inside" defaultValue={title} value={cardTitle} onValueChange={setCardTitle}></Input> :
-                        <p className="kanban-column-title bold text-xl">{title}</p>
+                        <p className="text-md font-bold">{title}</p>
                     }
                     {
                         isEditing ?
                         <Textarea className="mt-2" label="Content" defaultValue={content} value={cardContent} onValueChange={setCardContent}></Textarea> :
-                        <p>{content}</p>
+                        <p className="text-sm">{content}</p>
                     }
                     <div className="flex mt-1">
                         <div className="flex justify-start basis-1/2 space-x-1">

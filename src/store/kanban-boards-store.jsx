@@ -7,7 +7,8 @@ const savedBoards = JSON.parse(localStorage.getItem("boardsMetadata"));
 export const KBContext = createContext({
     boards: savedBoards == null ? [] : savedBoards,
     handleNewBoardCreation: () => {},
-    handleBoardDeletion: () => {}
+    handleBoardDeletion: () => {},
+    handleBoardEdit: () => {}
 });
 
 function KBReducer(state, action){
@@ -40,6 +41,19 @@ function KBReducer(state, action){
             boards: newBoards
         };
     }
+    else if (action.type === 'EDIT_BOARD'){
+        var boardsAfterEdit = [...state.boards];
+        var indexToEdit = findIndexInArray(boardsAfterEdit, "id", action.payload.id);
+
+        boardsAfterEdit[indexToEdit].name = action.payload.name;
+        boardsAfterEdit[indexToEdit].description = action.payload.description;
+
+        SaveObject("boardsMetadata", boardsAfterEdit);
+        return {
+            ...state,
+            boards: boardsAfterEdit
+        }
+    }
     else if (action.type === 'DELETION'){
         var indexToRemove = findIndexInArray(state.boards, "id", action.payload.id);
         var boardsAfterDeletion = [...state.boards];
@@ -63,7 +77,8 @@ export default function KBContextProvider({children}){
     const [KBState, KBDispatch] = useReducer(KBReducer, {
         boards: savedBoards == null ? [] : savedBoards,
         handleNewBoardCreation: () => {},
-        handleBoardDeletion: () => {}
+        handleBoardDeletion: () => {},
+        handleBoardEdit: () => {}
     });
 
     function handleNewBoardCreation(name, description, creation_date){
@@ -76,7 +91,10 @@ export default function KBContextProvider({children}){
 
         KBDispatch({
             type: 'CREATE_BOARD',
-            payload: {name, description, creation_date,
+            payload: {
+                name,
+                description,
+                creation_date,
                 id: nextAvailableID
             }
         });
@@ -91,10 +109,22 @@ export default function KBContextProvider({children}){
         })
     }
 
+    function handleBoardEdit(name, description, id){
+        KBDispatch({
+            type: 'EDIT_BOARD',
+            payload: {
+                name,
+                description,
+                id
+            }
+        })
+    }
+
     const KBContextValue = {
         boards: KBState.boards,
-        handleNewBoardCreation: handleNewBoardCreation,
-        handleBoardDeletion: handleBoardDeletion
+        handleNewBoardCreation,
+        handleBoardDeletion,
+        handleBoardEdit
     };
 
     return(<KBContext.Provider value={KBContextValue}>
