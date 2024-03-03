@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Textarea} from "@nextui-org/react";
 
 import {PencilIcon} from './Icons/PencilIcon.jsx';
@@ -10,12 +11,15 @@ export default function EditBoardModal({ handleBoardEdit, id, baseName, baseDesc
     const [name, setName] = useState(baseName)
     const [description, setDescription] = useState(baseDescription)
 
+    const navigate = useNavigate()
+
     const handleCreation = (onClose) => {
         handleBoardEdit(name, description, id);
         setName("");
         setDescription("");
         onClose();
-        location.reload();
+        // Refresh the page
+        navigate(0);
     }
 
     return(
