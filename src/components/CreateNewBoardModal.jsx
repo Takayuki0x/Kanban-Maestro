@@ -5,6 +5,14 @@ import {PencilIcon} from './Icons/PencilIcon.jsx';
 import {BlockquoteIcon} from './Icons/BlockquoteIcon.jsx';
 import {BoardIconSVG} from "./Icons/BoardIconSVG";
 
+/**
+ * Component for creating a new board modal.
+ * 
+ * @component
+ * @param {function} handleNewBoardCreation - Function to handle the creation of a new board.
+ * @returns {JSX.Element} New board modal component.
+*/
+
 export default function CreateNewBoardModal({ handleNewBoardCreation }){
     const {isOpen, onOpen, onOpenChange} = useDisclosure();
     const [name, setName] = useState("");

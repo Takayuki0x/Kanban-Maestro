@@ -1,17 +1,29 @@
 import { useState } from "react";
-
 import { Button, Popover, PopoverTrigger, PopoverContent, Input } from "@nextui-org/react";
 import { EditIcon } from "./Icons/EditIcon";
 import ColumnColorSelector from "./ColumnColorSelector";
 
-export default function KanbanEditColumnIcon({ columnID, handleEditColumn, currentTitle, currentColor }){
+/**
+ * Renders an icon for editing a Kanban column.
+ * @param {Object} props - The component props.
+ * @param {string} props.columnID - The ID of the column being edited.
+ * @param {Function} props.handleEditColumn - The function to handle column editing.
+ * @param {string} props.currentTitle - The current title of the column.
+ * @param {string} props.currentColor - The current color of the column.
+ * @returns {JSX.Element} - The rendered component.
+*/
+
+export default function KanbanEditColumnIcon({ columnID, handleEditColumn, currentTitle, currentColor }) {
     const [isOpen, setIsOpen] = useState(false);
     const [color, setColor] = useState(currentColor);
     const [title, setTitle] = useState(currentTitle);
     const [isError, setIsError] = useState(false);
 
+    /**
+     * Handles the column edit action.
+     */
     const handleColumnEdit = () => {
-        if(title == "" || title == null){
+        if (title === "" || title === null) {
             setIsError(true);
         } else {
             handleEditColumn(columnID, color, title);
@@ -20,7 +32,7 @@ export default function KanbanEditColumnIcon({ columnID, handleEditColumn, curre
         }
     }
 
-    return(
+    return (
         <div className="w-full h-12 flex justify-end">
             <Popover placement="right" showArrow offset={10} isOpen={isOpen} onOpenChange={(open) => setIsOpen(open)}>
                 <PopoverTrigger>
@@ -60,6 +72,5 @@ export default function KanbanEditColumnIcon({ columnID, handleEditColumn, curre
                 </PopoverContent>
             </Popover>
         </div>
-        
-    )
+    );
 }

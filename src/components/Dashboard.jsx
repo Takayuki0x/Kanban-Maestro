@@ -23,9 +23,20 @@ const columns = [
     {name: "ACTIONS", uid: "actions"},
 ]
 
+/**
+ * Dashboard component displays a table of Kanban boards.
+ * @returns {JSX.Element} The rendered Dashboard component.
+*/
+
 export default function Dashboard(){
     const { boards, handleNewBoardCreation, handleBoardDeletion, handleBoardEdit } = useContext(KBContext);
 
+    /**
+     * Renders the content of a table cell based on the column key.
+     * @param {Object} board - The board object.
+     * @param {string} columnKey - The key of the column.
+     * @returns {JSX.Element} The rendered content of the table cell.
+    */
     const renderCell = useCallback((board, columnKey) => {
         const cellValue = board[columnKey];
 

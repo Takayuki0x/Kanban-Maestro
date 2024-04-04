@@ -1,3 +1,10 @@
+/**
+ * Renders the top navigation bar component.
+ * @param {Object} props - The component props.
+ * @param {string} props.activePage - The currently active page.
+ * @returns {JSX.Element} The top navigation bar component.
+*/
+
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem} from "@nextui-org/react";
 import { Link } from "react-router-dom";
 import WhatsNewModal from "./WhatsNewModal";
@@ -13,11 +20,6 @@ export default function TopNavbar({activePage}){
                 <NavbarItem isActive={activePage === "Dashboard"}>
                     <Link className="hover:cursor-pointer" to="/dashboard">
                         Dashboard
-                    </Link>
-                </NavbarItem>
-                <NavbarItem isActive={activePage === "Documentation"}>
-                    <Link className="hover:cursor-pointer" to="/documentation">
-                        Documentation
                     </Link>
                 </NavbarItem>
             </NavbarContent>

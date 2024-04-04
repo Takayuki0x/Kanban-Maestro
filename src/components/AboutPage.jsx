@@ -4,6 +4,11 @@ import {Card, CardHeader, CardBody, Image, Button} from "@nextui-org/react";
 import { BoardIconSVG } from "./Icons/BoardIconSVG";
 import { GithubIcon } from "./Icons/GithubIcon";
 
+/**
+ * Renders the About page component.
+ * @returns {JSX.Element} The About page component.
+*/
+
 export default function AboutPage(){
     let navigate = useNavigate();
     const redirectToDasboard = () =>{ 

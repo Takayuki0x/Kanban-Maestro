@@ -6,6 +6,11 @@ import TopNavbar from "./TopNavbar";
 import AddNewKanbanColumnIcon from "./AddNewKanbanColumnIcon";
 import { BCContext } from "../store/board-contents-store";
 
+/**
+ * Renders the Kanban board component.
+ * @returns {JSX.Element} The Kanban board component.
+*/
+
 export default function KanbanBoard(){
     const {id, columns, title, handleBoardIDChange, handleCreateColumn} = useContext(BCContext);
     const boardID = useParams();
