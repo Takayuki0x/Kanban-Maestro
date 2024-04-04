@@ -21,7 +21,7 @@ const colorsDict = {
 }
 
 /**
- * KanbanColumn component represents a single column in the Kanban board.
+ * KanbanColumn component represents a single column in the Kanban board. Currently being updated.
  * @param {Object} columnData - The data for the column.
  * @returns {JSX.Element} The KanbanColumn component.
 */
