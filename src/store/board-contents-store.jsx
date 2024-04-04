@@ -2,6 +2,14 @@ import { createContext, useReducer } from "react";
 import findIndexInArray from "../utils/findIndexInArray";
 import { SaveObject } from "../utils/SaveObject";
 
+/**
+ * @file board-contents-store.jsx
+ * @desc This file contains the implementation of the BCContextProvider component, which provides a context for managing board contents.
+ * The BCContextProvider component uses the useReducer hook to manage the state of the board contents.
+ * It also defines various action functions to handle CRUD operations on columns and cards.
+ * The BCContextProvider component exports the BCContext, which can be used by other components to access the board contents state and action functions.
+*/
+
 export const BCContext = createContext({
     id: -1,
     columns: [{
@@ -18,141 +26,179 @@ export const BCContext = createContext({
 });
 
 function BCReducer(state, action){
-    if(action.type === 'CHANGED_ID'){
-        const loadedData = JSON.parse(localStorage.getItem(`board_data_${action.payload.newID}`));
-        if(loadedData == null || loadedData == undefined){
-            return(state);
-        } else {
+    switch(action.type){
+        case 'CHANGED_ID': {
+            const loadedData = JSON.parse(localStorage.getItem(`board_data_${action.payload.newID}`));
+            if(loadedData == null || loadedData == undefined){
+                return(state);
+            }  {
+                return({
+                    id: action.payload.newID,
+                    title: loadedData.title,
+                    columns: loadedData.columns
+                });
+            }
+        }
+        case'SET_BOARD': {
+            return(action.payload)
+        }
+        case'DELETE_COLUMN': {
+            var columnsAfterDeletion = [...state.columns];
+            var indexToRemove = findIndexInArray(columnsAfterDeletion, "id", action.payload.columnID);
+            columnsAfterDeletion.splice(indexToRemove, 1);
+
+            SaveObject(`board_data_${state.id}`, {
+                ...state,
+                columns: columnsAfterDeletion
+            })
+
             return({
-                id: action.payload.newID,
-                title: loadedData.title,
-                columns: loadedData.columns
-            });
+                ...state,
+                columns: columnsAfterDeletion
+            })
         }
-    }
-    else if(action.type === 'SET_BOARD'){
-        return(action.payload)
-    }
-    else if(action.type === 'DELETE_COLUMN'){
-        var columnsAfterDeletion = [...state.columns];
-        var indexToRemove = findIndexInArray(columnsAfterDeletion, "id", action.payload.columnID);
-        columnsAfterDeletion.splice(indexToRemove, 1);
+        case'CREATE_COLUMN': {
+            var nextAvailableColumnID;
+            try{
+                nextAvailableColumnID = state.columns.at(-1).id + 1;
+            } catch {
+                nextAvailableColumnID = 0
+            }
 
-        SaveObject(`board_data_${state.id}`, {
-            ...state,
-            columns: columnsAfterDeletion
-        })
+            var columnsWithAddedOne = [...state.columns,{
+                id: nextAvailableColumnID,
+                color: action.payload.color,
+                title: action.payload.title,
+                cards: []
+            }]
 
-        return({
-            ...state,
-            columns: columnsAfterDeletion
-        })
-    }
-    else if(action.type === 'CREATE_COLUMN'){
-        var nextAvailableColumnID;
-        try{
-            nextAvailableColumnID = state.columns.at(-1).id + 1;
-        } catch {
-            nextAvailableColumnID = 0
+            SaveObject(`board_data_${state.id}`, {
+                ...state,
+                columns: columnsWithAddedOne
+            })
+
+            return({
+                ...state,
+                columns: columnsWithAddedOne
+            })
         }
+        case'EDIT_COLUMN': {
+            var columnsAfterEdit = [...state.columns];
+            var indexToEdit = findIndexInArray(columnsAfterEdit, "id", action.payload.columnID);
 
-        var columnsWithAddedOne = [...state.columns,{
-            id: nextAvailableColumnID,
-            color: action.payload.color,
-            title: action.payload.title,
-            cards: []
-        }]
+            var prevColumnToEdit = columnsAfterEdit[indexToEdit];
+            prevColumnToEdit.title = action.payload.title;
+            prevColumnToEdit.color = action.payload.color;
 
-        SaveObject(`board_data_${state.id}`, {
-            ...state,
-            columns: columnsWithAddedOne
-        })
+            columnsAfterEdit[indexToEdit] = prevColumnToEdit;
 
-        return({
-            ...state,
-            columns: columnsWithAddedOne
-        })
-    }
-    else if(action.type === 'EDIT_COLUMN'){
-        var columnsAfterEdit = [...state.columns];
-        var indexToEdit = findIndexInArray(columnsAfterEdit, "id", action.payload.columnID);
+            SaveObject(`board_data_${state.id}`, {
+                ...state,
+                columns: columnsAfterEdit
+            })
 
-        var prevColumnToEdit = columnsAfterEdit[indexToEdit];
-        prevColumnToEdit.title = action.payload.title;
-        prevColumnToEdit.color = action.payload.color;
-
-        columnsAfterEdit[indexToEdit] = prevColumnToEdit;
-
-        SaveObject(`board_data_${state.id}`, {
-            ...state,
-            columns: columnsAfterEdit
-        })
-
-        return({
-            ...state,
-            columns: columnsAfterEdit
-        })
-    }
-    else if(action.type === 'CREATE_CARD'){
-        var columnsAfterCardCreation = [...state.columns];
-        var indexToAddCardTo = findIndexInArray(columnsAfterCardCreation, "id", action.payload.columnID);
-
-        var columnAfterAddingCard = columnsAfterCardCreation[indexToAddCardTo];
-        var nextAvailableCardID;
-
-        try{
-            nextAvailableCardID = columnAfterAddingCard.cards.at(-1).id + 1;
-        } catch {
-            nextAvailableCardID = 0;
+            return({
+                ...state,
+                columns: columnsAfterEdit
+            })
         }
+        case'CREATE_CARD': {
+            var columnsAfterCardCreation = [...state.columns];
+            var indexToAddCardTo = findIndexInArray(columnsAfterCardCreation, "id", action.payload.columnID);
 
-        var columnCardsAfterCreation = [...columnAfterAddingCard.cards, {
-            id: nextAvailableCardID,
-            title: action.payload.title,
-            content: action.payload.content
-        }];
+            var columnAfterAddingCard = columnsAfterCardCreation[indexToAddCardTo];
+            var nextAvailableCardID;
 
-        columnAfterAddingCard.cards = columnCardsAfterCreation;
-        columnsAfterCardCreation[indexToAddCardTo] = columnAfterAddingCard;
+            try{
+                nextAvailableCardID = columnAfterAddingCard.cards.at(-1).id + 1;
+            } catch {
+                nextAvailableCardID = 0;
+            }
 
-        SaveObject(`board_data_${state.id}`, {
-            ...state,
-            columns: columnsAfterCardCreation
-        })
+            var columnCardsAfterCreation = [...columnAfterAddingCard.cards, {
+                id: nextAvailableCardID,
+                title: action.payload.title,
+                content: action.payload.content
+            }];
 
-        return{
-            ...state,
-            columns: columnsAfterCardCreation
+            columnAfterAddingCard.cards = columnCardsAfterCreation;
+            columnsAfterCardCreation[indexToAddCardTo] = columnAfterAddingCard;
+
+            SaveObject(`board_data_${state.id}`, {
+                ...state,
+                columns: columnsAfterCardCreation
+            })
+
+            return{
+                ...state,
+                columns: columnsAfterCardCreation
+            }
         }
-    }
-    else if(action.type === 'EDIT_CARD' || action.type === 'DELETE_CARD'){
-        var columnsAfterCardEdit = [...state.columns];
-        var indexColumnToEditCardIn = findIndexInArray(columnsAfterCardEdit, "id", action.payload.columnID);
+        case'EDIT_CARD': {
+            var columnsAfterCardEdit = [...state.columns];
+            var indexColumnToEditCardIn = findIndexInArray(columnsAfterCardEdit, "id", action.payload.columnID);
 
-        var columnAfterEditingCard = columnsAfterCardEdit[indexColumnToEditCardIn];
-        var indexOfTheCardToEdit = findIndexInArray(columnAfterEditingCard.cards, "id", action.payload.cardID)
+            var columnAfterEditingCard = columnsAfterCardEdit[indexColumnToEditCardIn];
+            var indexOfTheCardToEdit = findIndexInArray(columnAfterEditingCard.cards, "id", action.payload.cardID)
 
-        if(action.type === 'DELETE_CARD'){
-            columnAfterEditingCard.cards.splice(indexOfTheCardToEdit, 1);
-        } else {
             var copyOfCurrentCards = [...columnAfterEditingCard.cards];
             copyOfCurrentCards[indexOfTheCardToEdit].title = action.payload.title;
             copyOfCurrentCards[indexOfTheCardToEdit].content = action.payload.content;
             columnAfterEditingCard.cards = copyOfCurrentCards;
+
+            columnsAfterCardEdit[indexColumnToEditCardIn] = columnAfterEditingCard;
+            SaveObject(`board_data_${state.id}`, {
+                ...state,
+                columns: columnsAfterCardEdit
+            })
+            return({
+                ...state,
+                columns: columnsAfterCardEdit
+            })
         }
+        case 'DELETE_CARD': {
+            var columnsAfterCardDelete = [...state.columns];
+            var indexColumnToDeleteCardIn = findIndexInArray(columnsAfterCardDelete, "id", action.payload.columnID);
 
-        columnsAfterCardEdit[indexColumnToEditCardIn] = columnAfterEditingCard;
+            var columnAfterDeletingCard = columnsAfterCardDelete[indexColumnToDeleteCardIn];
+            var indexOfTheCardToDelete = findIndexInArray(columnAfterDeletingCard.cards, "id", action.payload.cardID)
 
-        SaveObject(`board_data_${state.id}`, {
-            ...state,
-            columns: columnsAfterCardEdit
-        })
+            columnAfterDeletingCard.cards.splice(indexOfTheCardToDelete, 1);
+ 
+            columnsAfterCardDelete[indexColumnToDeleteCardIn] = columnAfterDeletingCard;
+            SaveObject(`board_data_${state.id}`, {
+                ...state,
+                columns: columnsAfterCardDelete
+            })
+            return({
+                ...state,
+                columns: columnsAfterCardDelete
+            })
+        }
+        case'REORDER_CARDS': {
+            var affectedColumnId = action.payload.result.source.droppableId;
 
-        return({
-            ...state,
-            columns: columnsAfterCardEdit
-        })
+            var columnsCopied = [...state.columns]
+            var affectedColumn = columnsCopied.find((column) => column.id == affectedColumnId);
+            var cardsCopy = [...affectedColumn.cards];
+
+            var cardToMove = cardsCopy[action.payload.result.source.index];
+            cardsCopy.splice(action.payload.result.source.index, 1);
+            cardsCopy.splice(action.payload.result.destination.index, 0, cardToMove);
+
+            affectedColumn.cards = cardsCopy;
+            SaveObject(`board_data_${state.id}`, {
+                ...state,
+                columns: columnsCopied
+            })
+
+            return({
+                ...state,
+                columns: columnsCopied
+            })
+        }
     }
+
 }
 
 export default function BCContextProvider({children}){
@@ -243,6 +289,15 @@ export default function BCContextProvider({children}){
         })
     }
 
+    function handleCardsReordered(result){
+        BCDispatch({
+            type: 'REORDER_CARDS',
+            payload: {
+                result
+            }
+        })
+    }
+
     const BCContextValue = {
         id: BCState.id,
         columns: BCState.columns,
@@ -253,7 +308,8 @@ export default function BCContextProvider({children}){
         handleEditColumn,
         handleCreateCard,
         handleEditCard,
-        handleDeleteCard
+        handleDeleteCard,
+        handleCardsReordered
     };
 
     return(<BCContext.Provider value={BCContextValue}>

@@ -1,3 +1,9 @@
+
+/**
+ * Calculates the size of the data stored in the local storage.
+ * @returns {string} The size of the data stored in the local storage in KB, along with the maximum allowed size.
+*/
+
 export default function getLocalStorageSize (){
   let allStrings = '';
   for (const key of Object.keys(window.localStorage)) {

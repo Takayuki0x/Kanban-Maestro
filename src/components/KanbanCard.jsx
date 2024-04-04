@@ -6,7 +6,20 @@ import { AcceptIcon } from "./Icons/AcceptIcon";
 import { RejectIcon } from "./Icons/RejectIcon";
 import { DeleteIcon } from "./Icons/DeleteIcon";
 
-export default function KanbanCard({ title, content, columnID, cardID, handleEditCard, handleDeleteCard }){
+/**
+ * KanbanCard component represents a card in a Kanban board.
+ * @param {Object} props - The component props.
+ * @param {string} props.title - The title of the card.
+ * @param {string} props.content - The content of the card.
+ * @param {string} props.columnID - The ID of the column the card belongs to.
+ * @param {string} props.cardID - The ID of the card.
+ * @param {Function} props.handleEditCard - The function to handle card editing.
+ * @param {Function} props.handleDeleteCard - The function to handle card deletion.
+ * @param {Object} props.provided - The provided object for drag and drop functionality.
+ * @returns {JSX.Element} The KanbanCard component.
+*/
+
+export default function KanbanCard({ title, content, columnID, cardID, handleEditCard, handleDeleteCard, provided }){
     const [isEditing, setIsEditing] = useState(false);
     const [cardTitle, setCardTitle] = useState(title);
     const [cardContent, setCardContent] = useState(content);
@@ -17,6 +30,8 @@ export default function KanbanCard({ title, content, columnID, cardID, handleEdi
 
     const handleDisableEditingCancel = () => {
         setIsEditing(false);
+        setCardTitle(title);
+        setCardContent(content);
     }
 
     const handleDisableEditingAccept = () => {
@@ -30,7 +45,7 @@ export default function KanbanCard({ title, content, columnID, cardID, handleEdi
     }
 
     return(
-        <div className="mt-3">
+        <div className="mt-3" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
             <Card radius="none" shadow="sm">
                 <CardBody>
                     {

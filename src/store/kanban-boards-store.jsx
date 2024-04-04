@@ -2,6 +2,11 @@ import { createContext, useReducer } from "react";
 import { SaveObject } from "../utils/SaveObject";
 import findIndexInArray from "../utils/findIndexInArray";
 
+/**
+ * @fileoverview This file contains the implementation of the Kanban Boards Store, which manages the state and actions related to Kanban boards metadata.
+ * @module kanban-boards-store
+*/
+
 const savedBoards = JSON.parse(localStorage.getItem("boardsMetadata"));
 
 export const KBContext = createContext({
@@ -49,6 +54,12 @@ function KBReducer(state, action){
         boardsAfterEdit[indexToEdit].description = action.payload.description;
 
         SaveObject("boardsMetadata", boardsAfterEdit);
+
+        // Fix a bug where the board's title wouldn't be updated when it's edited
+        var editedBoardContents = JSON.parse(localStorage.getItem(`board_data_${action.payload.id}`));
+        editedBoardContents.title = action.payload.name;
+        SaveObject(`board_data_${action.payload.id}`, editedBoardContents)
+
         return {
             ...state,
             boards: boardsAfterEdit

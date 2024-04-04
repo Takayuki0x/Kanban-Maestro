@@ -1,5 +1,10 @@
 import { useRouteError } from "react-router-dom";
 
+/**
+ * ErrorPage component displays an error message when an unexpected error occurs.
+ * @returns {JSX.Element} The rendered ErrorPage component.
+*/
+
 export default function ErrorPage(){
     const error = useRouteError();
     console.error(error);

@@ -1,18 +1,32 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Textarea} from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Textarea } from "@nextui-org/react";
 
-import {PencilIcon} from './Icons/PencilIcon.jsx';
-import {BlockquoteIcon} from './Icons/BlockquoteIcon.jsx';
-import {EditIcon} from './Icons/EditIcon';
+import { PencilIcon } from './Icons/PencilIcon.jsx';
+import { BlockquoteIcon } from './Icons/BlockquoteIcon.jsx';
+import { EditIcon } from './Icons/EditIcon';
 
-export default function EditBoardModal({ handleBoardEdit, id, baseName, baseDescription }){
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
-    const [name, setName] = useState(baseName)
-    const [description, setDescription] = useState(baseDescription)
+/**
+ * EditBoardModal component for editing a board.
+ * @param {Object} props - The component props.
+ * @param {Function} props.handleBoardEdit - The function to handle board edit.
+ * @param {string} props.id - The ID of the board.
+ * @param {string} props.baseName - The base name of the board.
+ * @param {string} props.baseDescription - The base description of the board.
+ * @returns {JSX.Element} The EditBoardModal component.
+*/
 
-    const navigate = useNavigate()
+export default function EditBoardModal({ handleBoardEdit, id, baseName, baseDescription }) {
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const [name, setName] = useState(baseName);
+    const [description, setDescription] = useState(baseDescription);
 
+    const navigate = useNavigate();
+
+    /**
+     * Handles the creation of the board.
+     * @param {Function} onClose - The function to close the modal.
+     */
     const handleCreation = (onClose) => {
         handleBoardEdit(name, description, id);
         setName("");
@@ -20,16 +34,16 @@ export default function EditBoardModal({ handleBoardEdit, id, baseName, baseDesc
         onClose();
         // Refresh the page
         navigate(0);
-    }
+    };
 
-    return(
+    return (
         <>
             <EditIcon onClick={onOpen} />
-            <Modal 
-            isOpen={isOpen} 
-            onOpenChange={onOpenChange}
-            placement="top-center"
-            backdrop="blur"
+            <Modal
+                isOpen={isOpen}
+                onOpenChange={onOpenChange}
+                placement="top-center"
+                backdrop="blur"
             >
                 <ModalContent>
                     {(onClose) => (
@@ -68,6 +82,5 @@ export default function EditBoardModal({ handleBoardEdit, id, baseName, baseDesc
                 </ModalContent>
             </Modal>
         </>
-        
-    )
+    );
 }
