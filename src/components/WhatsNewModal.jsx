@@ -23,6 +23,7 @@ export default function WhatsNewModal(){
                   <h1 className="font-bold">Features:</h1>
                   <ul className="list-disc px-4">
                       <li>You can now drag and drop your cards to reorder them within the same column.</li>
+                      <li>You can now drag and drop your cards to change which column they&apos;re in</li>
                   </ul>
                   <h1 className="font-bold">Bugs fixed:</h1>
                   <ul className="list-disc px-4">
