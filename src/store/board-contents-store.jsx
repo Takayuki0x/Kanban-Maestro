@@ -197,6 +197,30 @@ function BCReducer(state, action){
                 columns: columnsCopied
             })
         }
+        case'CARD_COLUMN_CHANGED': {
+            var affectedColumnIdSource = action.payload.result.source.droppableId;
+            var affectedColumnIdDestination = action.payload.result.destination.droppableId;
+
+            var columnsCopiedB = [...state.columns]
+            var affectedColumnSource = columnsCopiedB.find((column) => column.id == affectedColumnIdSource);
+            var affectedColumnDestination = columnsCopiedB.find((column) => column.id == affectedColumnIdDestination);
+
+            var cardToMoveB = affectedColumnSource.cards[action.payload.result.source.index];
+            affectedColumnSource.cards.splice(action.payload.result.source.index, 1);
+            affectedColumnDestination.cards.splice(action.payload.result.destination.index, 0, cardToMoveB);
+
+            console.log(columnsCopiedB)
+
+            SaveObject(`board_data_${state.id}`, {
+                ...state,
+                columns: columnsCopiedB
+            })
+
+            return({
+                ...state,
+                columns: columnsCopiedB
+            })
+        }
     }
 
 }
@@ -298,6 +322,15 @@ export default function BCContextProvider({children}){
         })
     }
 
+    function handleCardsColumnChanged(result){
+        BCDispatch({
+            type: 'CARD_COLUMN_CHANGED',
+            payload: {
+                result
+            }
+        })
+    }
+
     const BCContextValue = {
         id: BCState.id,
         columns: BCState.columns,
@@ -309,7 +342,8 @@ export default function BCContextProvider({children}){
         handleCreateCard,
         handleEditCard,
         handleDeleteCard,
-        handleCardsReordered
+        handleCardsReordered,
+        handleCardsColumnChanged
     };
 
     return(<BCContext.Provider value={BCContextValue}>
